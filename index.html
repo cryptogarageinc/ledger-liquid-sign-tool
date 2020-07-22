@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ledger Liquid Sign Tool</title>
+    <style>
+      #main {
+        font-size: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 120vh;
+        font-family: sans-serif;
+      }
+      #outputTx, #outputSignature {
+        width: 99%;
+      }
+      #connectResponse, #selectFileName {
+        font-size: 14px;
+        width: 540px;
+      }
+      #txFile, #connectButton, #requestSign {
+        font-size: 14px;
+        display: inline-block;
+        width: 200px;
+        height: 25px;
+      }
+      h1 {
+        font-size: 32px;
+      }
+      h2 {
+        font-size: 20px;
+        font-weight: bold;
+      }
+      h3 {
+        font-size: 16px;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+        margin-top: 0px;
+        padding-top: 0px;
+      }
+      .input-parameter {
+        margin-top: 5px;
+        padding-top: 5px;
+      }
+      .sign-exec {
+        margin-top: 5px;
+        padding-top: 5px;
+      }
+      .inputField {
+        font-size: 14px;
+        display: inline-block;
+        width: 200px;
+      }
+      .inputText {
+        font-size: 13px;
+        width: 540px;
+      }
+      .nowrap {
+
+      }
+    </style>
+  </head>
+  <body>
+    <div class="connect">
+      <h2 id="app-name">ConnectApp: -</h2>
+      <div class="connect-status">
+        <input type="button" id="connectButton" value="connect to ledger" />
+        <input type="text" id="connectResponse" value="disconnect" readonly />
+      </div>
+    </div>
+    <hr/>
+    <div class="input">
+      <div class="input-file">
+        <input type="button" class="txFile" id="txFile" value="select tx json file" />
+        <input type="text" id="selectFileName" value="" readonly />
+      </div>
+      <div class="input-parameter">
+        <span class="inputField">TXID:</span> <input type="text" class="inputText" id="txid" value="" /><br>
+        <span class="inputField">VOUT:</span> <input type="number" id="vout" value="0" min="0" max="4294967295" /><br>
+        <span class="inputField">Bip32Path:</span> <input type="text" class="inputText" id="bip32Path" value="m/44h/1776h/0h/0/0" /><br>
+        <span class="inputField">Value Commitment:</span> <input type="text" class="inputText" id="commitment" value="" /><br>
+        <span class="inputField">Output Descriptor (option):</span> <input type="text" class="inputText" id="descriptor" value="" /><br>
+        <span class="inputField">UTXO Address (option):</span> <input type="text" class="inputText" id="address" value="" /><br>
+        <span class="inputField">Redeem Script (option):</span> <input type="text" class="inputText" id="redeemScript" value="" /><br>
+      </div>
+      <div class="sign-exec">
+        <input type="button" id="requestSign" value="generate sign" />
+      </div>
+    </div>
+    <hr/>
+    <div class="output">
+      <div class="signature-output">
+        Output Signature:<br>
+        <textarea rows="2" class="outputSignature" id="outputSignature" readonly></textarea>
+      </div>
+      <div class="tx-output">
+        Output Signed Transaction:<br>
+        <textarea rows="5" class="outputTx" id="outputTx" readonly></textarea>
+      </div>
+    </div>
+
+    <script>
+      // You can also require other files to run in this process
+      require("./renderer.js");
+    </script>
+  </body>
+</html>
