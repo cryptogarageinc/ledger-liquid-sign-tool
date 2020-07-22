@@ -18,16 +18,16 @@ extraMetadata:
 
 compression: normal
 
-afterSign: "dev_script/package/notarize/notarize.js"
+#afterSign: "dev_script/package/notarize/notarize.js"
 
 mac:
   target:
     - zip
     - dmg
-  hardenedRuntime: true
-  gatekeeperAssess: false
-  entitlements: "dev_script/package/notarize/entitlements.mac.plist"
-  entitlementsInherit: "dev_script/package/notarize/entitlements.mac.plist"
+#  hardenedRuntime: true
+#  gatekeeperAssess: false
+#  entitlements: "dev_script/package/notarize/entitlements.mac.plist"
+#  entitlementsInherit: "dev_script/package/notarize/entitlements.mac.plist"
   publish:
     provider: "github"
     private: true
