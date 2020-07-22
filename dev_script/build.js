@@ -1,7 +1,8 @@
 const childProcess = require("child_process")
 const builder = require("electron-builder")
 
-const appVersion = childProcess.execSync("npm run appVersion --silent").toString().trim()
+const appVersion = (process.argv.length > 2) ?
+  process.argv[2] : childProcess.execSync("npm run appVersion --silent").toString().trim();
 
 builder.build({
   config: {

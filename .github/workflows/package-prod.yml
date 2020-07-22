@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+# 環境変数の説明
+
+#  ■ GitHub secretsへ設定されている値
+#  GH_TOKEN:
+#    description: "本リポジトリに対してのpush権限を持ったgithub token(cg-circleci)"
+#  CSC_LINK: ${{ secrets.CSC_LINK }}
+#    description: "署名用のp12ファイル情報"
+#  CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+#    description: "署名用のp12ファイルのパスワード"
+#  APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+#    description: "apple id サインイン用のパスワード"
+#  APPLE_ID: ${{ secrets.APPLE_ID }}
+#    description: "署名に利用するapple id"
+
+#  ■ 定数
+#  NODE_VERSION:
+#    description: "パッケージング時のnodeバージョン"
+
+env:
+  NODE_VERSION: 12.18.2
+
+jobs:
+  build-on-mac:
+    # 環境情報： https://github.com/actions/virtual-environments/blob/master/images/macos/macos-10.15-Readme.md
+    runs-on: macos-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      CSC_LINK: ${{ secrets.CSC_LINK }}
+#      CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+#      APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+#      APPLE_ID: ${{ secrets.APPLE_ID }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+        shell: bash
+      - name: dump version
+        env:
+          version: ${{ steps.get_version.outputs.VERSION }}
+        run: echo "version=${version}"
+        shell: bash
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.NODE_VERSION }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-${{ env.NODE_VERSION }}-
+      - name: Install node modules
+        run: yarn
+      - name: Package app
+        env:
+          version: ${{ steps.get_version.outputs.VERSION }}
+        run: yarn release -- ${{ steps.get_version.outputs.VERSION }}
+
+  build-on-win:
+    # 環境情報： https://github.com/actions/virtual-environments/blob/master/images/win/Windows2019-Readme.md
+    runs-on: windows-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+        shell: bash
+      - name: dump version
+        env:
+          version: ${{ steps.get_version.outputs.VERSION }}
+        run: echo "version=${version}"
+        shell: bash
+      - name: Set bash env
+        run: |
+          echo "::add-path::/c/Program Files/Git/mingw64/libexec/git-core"
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.NODE_VERSION }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-${{ env.NODE_VERSION }}-
+      - name: Install node modules
+        run: yarn
+      - name: Build app
+        shell: bash
+        run: yarn release -- ${{ steps.get_version.outputs.VERSION }}

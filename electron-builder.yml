@@ -26,8 +26,8 @@ mac:
     - dmg
   hardenedRuntime: true
   gatekeeperAssess: false
-#  entitlements: "dev_script/package/notarize/entitlements.mac.plist"
-#  entitlementsInherit: "dev_script/package/notarize/entitlements.mac.plist"
+  entitlements: "dev_script/package/notarize/entitlements.mac.plist"
+  entitlementsInherit: "dev_script/package/notarize/entitlements.mac.plist"
   publish:
     provider: "github"
     private: true
