@@ -66,7 +66,7 @@ jobs:
       - name: Package app
         env:
           version: ${{ steps.get_version.outputs.VERSION }}
-        run: yarn release -- ${{ steps.get_version.outputs.VERSION }}
+        run: yarn release ${{ steps.get_version.outputs.VERSION }}
 
   build-on-win:
     # 環境情報： https://github.com/actions/virtual-environments/blob/master/images/win/Windows2019-Readme.md
@@ -105,4 +105,4 @@ jobs:
         run: yarn
       - name: Build app
         shell: bash
-        run: yarn release -- ${{ steps.get_version.outputs.VERSION }}
+        run: yarn release ${{ steps.get_version.outputs.VERSION }}
