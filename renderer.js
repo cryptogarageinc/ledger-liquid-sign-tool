@@ -1,11 +1,12 @@
 const { ipcRenderer } = require('electron');
 const { readFile } = require('fs');
 const { basename } = require('path');
-const { canTxSignInfo, checkTxFileInfo } = require('./txFileUtil');
+const {
+  canTxSignInfo, checkTxFileInfo, getTxHex, getAuthorizationSignature,
+  createTxInfo,
+} = require('./txFileUtil');
 
 const appNameTitle = 'ConnectApp';
-
-let txFileInfo = {};
 
 function changeDisable(disabled, connectDisabled = undefined) {
   const fieldNames = [
@@ -22,6 +23,8 @@ function changeDisable(disabled, connectDisabled = undefined) {
     'address',
     'redeemScript',
     'descriptor',
+    'tx',
+    'authSig',
   ];
   for (const name of fieldNames) {
     const field = document.getElementById(name);
@@ -32,7 +35,10 @@ function changeDisable(disabled, connectDisabled = undefined) {
         field.disabled = disabled;
       }
     } else if ((!disabled) && (name === 'requestSign')) {
-      field.disabled = !checkTxFileInfo(txFileInfo);
+      const txInfo = createTxInfo(
+        document.getElementById('tx').value,
+        document.getElementById('authSig').value);
+      field.disabled = !checkTxFileInfo(txInfo);
     } else {
       field.disabled = disabled;
     }
@@ -72,6 +78,7 @@ ipcRenderer.on("responseTxSign", (event, result) => {
     document.getElementById('outputSignature').value = result.signInfo.signatureList[0].signature;
     if (result.signInfo.hasAddedSignatureToTxHex[0] === true) {
       document.getElementById('outputTx').value = result.signInfo.txHex;
+      document.getElementById('tx').value = result.signInfo.txHex;
     } else {
       document.getElementById('outputTx').value = 'Inserting signatures on the Transaction is not supported by this script.';
     }
@@ -90,7 +97,10 @@ document.getElementById('connectButton').addEventListener('click', () => {
 });
 
 document.getElementById('requestSign').addEventListener('click', () => {
-  if (!canTxSignInfo(txFileInfo)) {
+  const txInfo = createTxInfo(
+    document.getElementById('tx').value,
+    document.getElementById('authSig').value);
+  if (!canTxSignInfo(txInfo)) {
     alert('require field is empty. (txid, vout, commitment, bip32Path)');
     return;
   }
@@ -107,7 +117,7 @@ document.getElementById('requestSign').addEventListener('click', () => {
   document.getElementById('requestSign').disabled = true;
   document.getElementById('outputSignature').value = 'during sign...';
   document.getElementById('outputTx').value = '';
-  ipcRenderer.send('requestTxSign', txFileInfo, signUtxoData);
+  ipcRenderer.send('requestTxSign', txInfo, signUtxoData);
 });
 
 document.getElementById('txFile').addEventListener('click', () => {
@@ -139,9 +149,20 @@ document.getElementById('txFile').addEventListener('click', () => {
             } else if (!checkTxFileInfo(JSON.parse(data))) {
               document.getElementById('selectFileName').value = 'Invalid tx json file.';
             } else {
-              txFileInfo = JSON.parse(data);
+              const txFileInfo = JSON.parse(data);
               document.getElementById('requestSign').disabled = false;
               document.getElementById('selectFileName').value = basename(files[0]);
+              document.getElementById('tx').value = getTxHex(txFileInfo);
+              document.getElementById('authSig').value = getAuthorizationSignature(txFileInfo);
+
+              // cleanup
+              document.getElementById('txid').value = '';
+              document.getElementById('vout').value = '0';
+              document.getElementById('commitment').value = '';
+              document.getElementById('bip32Path').value = 'm/44h/0h/0h/0/0';
+              document.getElementById('redeemScript').value = '';
+              document.getElementById('descriptor').value = '';
+              document.getElementById('address').value = '';
             }
           } catch (except) {
             console.log(except);
