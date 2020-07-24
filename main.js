@@ -80,7 +80,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
      webPreferences: {
       nodeIntegration: true
-    }, width: 800, height: 600 });
+    }, width: 800, height: 660 });
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({

@@ -40,7 +40,15 @@ const getAuthorizationSignature = function(jsonData) {
   throw new Error('Invalid tx json file format.');
 }
 
+const createTxInfo = function(tx, authSig) {
+  return {
+    tx,
+    authorizationSignature: authSig,
+  };
+}
+
 exports.canTxSignInfo = canTxSignInfo;
 exports.checkTxFileInfo = checkTxFileInfo;
 exports.getTxHex = getTxHex;
 exports.getAuthorizationSignature = getAuthorizationSignature;
+exports.createTxInfo = createTxInfo;
