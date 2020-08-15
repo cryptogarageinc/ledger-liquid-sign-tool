@@ -2,7 +2,17 @@ const { ipcRenderer } = require('electron');
 const { readFile } = require('fs');
 const { basename } = require('path');
 const {
-  canTxSignInfo, checkTxFileInfo, getTxHex, getAuthorizationSignature,
+  canTxSignInfo, 
+  checkTxFileInfo, 
+  getTxHex, 
+  getAuthorizationSignature,
+  getTxid,
+  getVout,
+  getValueCommitment,
+  getBip32Path,
+  getRedeemScript,
+  getDescriptor,
+  getAddress,
   createTxInfo,
 } = require('./txFileUtil');
 
@@ -154,15 +164,13 @@ document.getElementById('txFile').addEventListener('click', () => {
               document.getElementById('selectFileName').value = basename(files[0]);
               document.getElementById('tx').value = getTxHex(txFileInfo);
               document.getElementById('authSig').value = getAuthorizationSignature(txFileInfo);
-
-              // cleanup
-              document.getElementById('txid').value = '';
-              document.getElementById('vout').value = '0';
-              document.getElementById('commitment').value = '';
-              document.getElementById('bip32Path').value = 'm/44h/0h/0h/0/0';
-              document.getElementById('redeemScript').value = '';
-              document.getElementById('descriptor').value = '';
-              document.getElementById('address').value = '';
+              document.getElementById('txid').value = getTxid(txFileInfo);
+              document.getElementById('vout').value = getVout(txFileInfo);
+              document.getElementById('commitment').value = getValueCommitment(txFileInfo);
+              document.getElementById('bip32Path').value = getBip32Path(txFileInfo);
+              document.getElementById('redeemScript').value = getRedeemScript(txFileInfo);
+              document.getElementById('descriptor').value = getDescriptor(txFileInfo);
+              document.getElementById('address').value = getAddress(txFileInfo);
             }
           } catch (except) {
             console.log(except);

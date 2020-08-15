@@ -40,6 +40,55 @@ const getAuthorizationSignature = function(jsonData) {
   throw new Error('Invalid tx json file format.');
 }
 
+const getTxid = function(jsonData) {
+  if (checkTxFileInfo(jsonData)) {
+    return jsonData.txid;
+  }
+  throw new Error('Invalid tx json file format.');
+}
+
+const getVout = function(jsonData) {
+  if (checkTxFileInfo(jsonData)) {
+    return jsonData.vout;
+  }
+  throw new Error('Invalid tx json file format.');
+}
+
+const getValueCommitment = function(jsonData) {
+  if (checkTxFileInfo(jsonData)) {
+    return jsonData.valueCommitment;
+  }
+  throw new Error('Invalid tx json file format.');
+}
+
+const getBip32Path = function(jsonData) {
+  if (checkTxFileInfo(jsonData)) {
+    return jsonData.bip32Path;
+  }
+  throw new Error('Invalid tx json file format.');
+}
+
+const getRedeemScript = function(jsonData) {
+  if (checkTxFileInfo(jsonData)) {
+    return jsonData.redeemScript;
+  }
+  throw new Error('Invalid tx json file format.');
+}
+
+const getDescriptor = function(jsonData) {
+  if (checkTxFileInfo(jsonData)) {
+    return jsonData.descriptor;
+  }
+  throw new Error('Invalid tx json file format.');
+}
+
+const getAddress = function(jsonData) {
+  if (checkTxFileInfo(jsonData)) {
+    return jsonData.address;
+  }
+  throw new Error('Invalid tx json file format.');
+}
+
 const createTxInfo = function(tx, authSig) {
   return {
     tx,
@@ -51,4 +100,11 @@ exports.canTxSignInfo = canTxSignInfo;
 exports.checkTxFileInfo = checkTxFileInfo;
 exports.getTxHex = getTxHex;
 exports.getAuthorizationSignature = getAuthorizationSignature;
+exports.getTxid = getTxid;
+exports.getVout = getVout;
+exports.getValueCommitment = getValueCommitment;
+exports.getBip32Path = getBip32Path;
+exports.getRedeemScript = getRedeemScript;
+exports.getDescriptor = getDescriptor;
+exports.getAddress = getAddress;
 exports.createTxInfo = createTxInfo;
