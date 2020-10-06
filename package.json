@@ -15,7 +15,7 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "bl": ">=4.0.3",
-    "electron": "^8.4.0",
+    "electron": "^8.5.1",
     "electron-builder": "^22.7.0",
     "electron-notarize": "^1.0.0"
   },
