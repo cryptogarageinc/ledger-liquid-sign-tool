@@ -427,7 +427,7 @@ camelcase@^5.0.0, camelcase@^5.3.1:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-5.3.1.tgz#e3c9b31569e106811df242f715725a1f4c494320"
   integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
 
-"cfd-js-wasm@github:cryptogarageinc/cfd-js-wasm#semver:^0.1.2", "cfd-js-wasm@github:cryptogarageinc/cfd-js-wasm#semver:^0.1.9":
+"cfd-js-wasm@github:cryptogarageinc/cfd-js-wasm#semver:^0.1.2":
   version "0.1.9"
   resolved "https://codeload.github.com/cryptogarageinc/cfd-js-wasm/tar.gz/a5ab24412f915285ef3c5d18b3c848c904bad8a6"
   dependencies:
@@ -738,10 +738,10 @@ electron-publish@22.7.0:
     lazy-val "^1.0.4"
     mime "^2.4.5"
 
-electron@^8.4.0:
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-8.4.0.tgz#30692166dc8b2a511b3c01c70960d467efe2b8e6"
-  integrity sha512-SpgyccM5rjDJSGcpQjiviUBT44fZlSyhcjy8RpKSnAad+co4xY1vYj6T25U1CfSk0PH/dhvcp63P2sdXHCwq/Q==
+electron@^8.5.2:
+  version "8.5.2"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-8.5.2.tgz#7b0246c6676a39df0e5e384b11cfe854fe5917f0"
+  integrity sha512-VU+zZnmCzxoZ5UfBg2UGVm+nyxlNlQOQkotMLfk7FCtnkIOhX+sosl618OCxUWjOvPc+Mpg5MEkEmxPU5ziW4Q==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
