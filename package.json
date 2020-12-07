@@ -15,12 +15,12 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "bl": ">=4.0.3",
-    "electron": "^8.5.2",
-    "electron-builder": "^22.7.0",
+    "electron": "^11.0.3",
+    "electron-builder": "^22.9.1",
     "electron-notarize": "^1.0.0"
   },
   "dependencies": {
-    "cfd-js-wasm": "github:cryptogarageinc/cfd-js-wasm#semver:^0.1.9",
+    "cfd-js-wasm": "github:cryptogarageinc/cfd-js-wasm#semver:^0.2.6",
     "ledger-liquid-lib-simple": "git+https://github.com/cryptogarageinc/ledger-liquid-lib-simple.git#v0.0.8"
   }
 }
