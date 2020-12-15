@@ -1,6 +1,6 @@
 {
   "name": "ledger-liquid-sign-tool",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Electron ledger sign application",
   "main": "main.js",
   "scripts": {
@@ -14,13 +14,12 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "bl": ">=4.0.3",
-    "electron": "^11.0.3",
+    "electron": "^11.1.0",
     "electron-builder": "^22.9.1",
     "electron-notarize": "^1.0.0"
   },
   "dependencies": {
     "cfd-js-wasm": "github:cryptogarageinc/cfd-js-wasm#semver:^0.2.6",
-    "ledger-liquid-lib-simple": "git+https://github.com/cryptogarageinc/ledger-liquid-lib-simple.git#v0.0.8"
+    "ledger-liquid-lib-simple": "git+https://github.com/cryptogarageinc/ledger-liquid-lib-simple.git#v0.1.0"
   }
 }

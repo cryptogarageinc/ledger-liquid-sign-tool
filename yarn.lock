@@ -56,7 +56,7 @@
     "@ledgerhq/logs" "^5.30.0"
     node-hid "2.0.0-0"
 
-"@ledgerhq/hw-transport-node-hid@^5.19.1":
+"@ledgerhq/hw-transport-node-hid@^5.34.0":
   version "5.34.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-node-hid/-/hw-transport-node-hid-5.34.0.tgz#62a622094bed78a8f52858b5e83826d3838ba95d"
   integrity sha512-CS2NSGt8/xsEjkrTM6wfXxI23uIp4Zab7PQADhgxs0EOtc+6g/2708LKiJyLwFrzt0Q7hh0gjYGCz69/QtW5yQ==
@@ -84,10 +84,10 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-5.30.0.tgz#76e8d7e5a06a73c9b99da51fa5befd5cfd5309d4"
   integrity sha512-wUhg2VTfUrWihjdGqKkH/s7TBzdIM1yyd2LiscYsfTX2I0xYDMnpE+NkMReeGU8PN3QhCPgnlg9/P9V6UWoJBA==
 
-"@rushstack/ts-command-line@^4.4.6":
-  version "4.7.7"
-  resolved "https://registry.yarnpkg.com/@rushstack/ts-command-line/-/ts-command-line-4.7.7.tgz#3a983de1895a931e879ecdc8037251af00c4e78b"
-  integrity sha512-COSDys0WTVCORKam2hsTL32As4fHAf1RqC6FKS98hgR0Z90nh1JX8fGNkvSdxaZ6dOuNTJj3txh+SpWoHJoZJA==
+"@rushstack/ts-command-line@^4.7.8":
+  version "4.7.8"
+  resolved "https://registry.yarnpkg.com/@rushstack/ts-command-line/-/ts-command-line-4.7.8.tgz#3aa77cf544c571be3206fc2bcba20c7a096ed254"
+  integrity sha512-8ghIWhkph7NnLCMDJtthpsb7TMOsVGXVDvmxjE/CeklTqjbbUFBjGXizJfpbEkRQTELuZQ2+vGn7sGwIWKN2uA==
   dependencies:
     "@types/argparse" "1.0.38"
     argparse "~1.0.9"
@@ -123,7 +123,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^14.0.23":
+"@types/node@*":
   version "14.14.10"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.10.tgz#5958a82e41863cfc71f2307b3748e3491ba03785"
   integrity sha512-J32dgx2hw8vXrSbu4ZlVhn1Nm3GbeCFNw2FWL8S5QKucHGY0cyNwjdQdO+KMBZ4wpmC7KhLCiNsdk1RFRIYUQQ==
@@ -137,6 +137,11 @@
   version "13.13.34"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.34.tgz#c9300a1b6560d90817fb2bba650e250116a575f9"
   integrity sha512-g8D1HF2dMDKYSDl5+79izRwRgNPsSynmWMbj50mj7GZ0b7Lv4p8EmZjbo3h0h+6iLr6YmVz9VnF6XVZ3O6V1Ug==
+
+"@types/node@^14.14.13":
+  version "14.14.13"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.13.tgz#9e425079799322113ae8477297ae6ef51b8e0cdf"
+  integrity sha512-vbxr0VZ8exFMMAjCW8rJwaya0dMCDyYW2ZRdTyjtrCvJoENMpdUHOT/eTzvgyA5ZnqRZ/sI0NwqAxNHKYokLJQ==
 
 "@types/yargs-parser@*":
   version "15.0.0"
@@ -303,7 +308,7 @@ bindings@^1.4.0, bindings@^1.5.0:
   dependencies:
     file-uri-to-path "1.0.0"
 
-bl@>=4.0.3, bl@^4.0.3:
+bl@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/bl/-/bl-4.0.3.tgz#12d6287adc29080e22a705e5764b2a9522cdc489"
   integrity sha512-fs4G6/Hu4/EE+F75J8DuN/0IpQqNjAdC7aEQv7Qt8MHGUH7Ckv2MwTEEeN9QehD0pfIDkMI1bkHYkKy7xHyKIg==
@@ -421,12 +426,6 @@ camelcase@^5.3.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-5.3.1.tgz#e3c9b31569e106811df242f715725a1f4c494320"
   integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
-
-"cfd-js-wasm@github:cryptogarageinc/cfd-js-wasm#semver:^0.1.2":
-  version "0.1.10"
-  resolved "https://codeload.github.com/cryptogarageinc/cfd-js-wasm/tar.gz/9fa3f88751a0bbe721fdb17e29f61c3ca32071cb"
-  dependencies:
-    "@types/node" "^13.11.0"
 
 "cfd-js-wasm@github:cryptogarageinc/cfd-js-wasm#semver:^0.2.6":
   version "0.2.6"
@@ -727,10 +726,10 @@ electron-publish@22.9.1:
     lazy-val "^1.0.4"
     mime "^2.4.6"
 
-electron@^11.0.3:
-  version "11.0.3"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-11.0.3.tgz#c29eaacda38ce561890e59906ca5f507c72b3ec4"
-  integrity sha512-nNfbLi7Q1xfJXOEO2adck5TS6asY4Jxc332E4Te8XfQ9hcaC3GiCdeEqk9FndNCwxhJA5Lr9jfSGRTwWebFa/w==
+electron@^11.1.0:
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-11.1.0.tgz#8dfdf579d1eb79feef3e3d2937fc022e72129c90"
+  integrity sha512-RFAhR/852VMaRd9NSe7jprwSoG9dLc6u1GwnqRWg+/3cy/8Zrwt1Betw1lXiZH7hGuB9K2cqju83Xv5Pq5ZSGA==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
@@ -1202,16 +1201,16 @@ lazy-val@^1.0.4:
   resolved "https://registry.yarnpkg.com/lazy-val/-/lazy-val-1.0.4.tgz#882636a7245c2cfe6e0a4e3ba6c5d68a137e5c65"
   integrity sha512-u93kb2fPbIrfzBuLjZE+w+fJbUUMhNDXxNmMfaqNgpfQf1CO5ZSe2LfsnBqVAk7i/2NF48OSoRj+Xe2VT+lE8Q==
 
-"ledger-liquid-lib-simple@git+https://github.com/cryptogarageinc/ledger-liquid-lib-simple.git#v0.0.8":
-  version "0.0.8"
-  resolved "git+https://github.com/cryptogarageinc/ledger-liquid-lib-simple.git#2ead33af2583876fd86c0361f0e4ca96bc9866ea"
+"ledger-liquid-lib-simple@git+https://github.com/cryptogarageinc/ledger-liquid-lib-simple.git#v0.1.0":
+  version "0.1.0"
+  resolved "git+https://github.com/cryptogarageinc/ledger-liquid-lib-simple.git#541610574a44897ccd28fcf38332bd747926867b"
   dependencies:
-    "@ledgerhq/hw-transport-node-hid" "^5.19.1"
-    "@rushstack/ts-command-line" "^4.4.6"
-    "@types/node" "^14.0.23"
+    "@ledgerhq/hw-transport-node-hid" "^5.34.0"
+    "@rushstack/ts-command-line" "^4.7.8"
+    "@types/node" "^14.14.13"
     big-integer "^1.6.26"
     bs58 "^4.0.1"
-    cfd-js-wasm "github:cryptogarageinc/cfd-js-wasm#semver:^0.1.2"
+    cfd-js-wasm "github:cryptogarageinc/cfd-js-wasm#semver:^0.2.6"
     ripemd160 "^2.0.2"
     sha.js "^2.4.11"
 
