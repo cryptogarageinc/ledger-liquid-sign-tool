@@ -433,13 +433,6 @@ camelcase@^5.3.1:
   dependencies:
     "@types/node" "^13.11.0"
 
-"cfd-js-wasm@github:cryptogarageinc/cfd-js-wasm#semver:^0.1.9":
-  version "0.1.10"
-  uid "9fa3f88751a0bbe721fdb17e29f61c3ca32071cb"
-  resolved "https://codeload.github.com/cryptogarageinc/cfd-js-wasm/tar.gz/9fa3f88751a0bbe721fdb17e29f61c3ca32071cb"
-  dependencies:
-    "@types/node" "^13.11.0"
-
 chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
