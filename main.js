@@ -3,12 +3,16 @@ const LedgerLib = require("ledger-liquid-lib-simple");
 const signLib = require("ledger-liquid-lib-simple/sign-lib");
 
 const { app, BrowserWindow, ipcMain } = require("electron");
+const { promisify } = require('util');
+const { readFile } = require('fs');
 
 const path = require('path');
 const url = require('url');
 const CfdJs = require('cfd-js-wasm');
 
-const { getTxHex, getAuthorizationSignature } = require('./txFileUtil');
+const {
+    getTxHex, getAuthorizationSignature, checkTxFileInfo
+} = require('./txFileUtil');
 
 let lastConnectedApp = LedgerLib.ApplicationType.Empty;
 
@@ -75,6 +79,47 @@ function signTx(txFileInfo, signUtxoData) {
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
+
+function showFileSelectDialog() {
+  const { dialog } = require('electron')
+  return dialog.showOpenDialog(mainWindow, {
+      title: 'transaction json file',
+      properties: ['openFile'],
+      filters: [{
+        name: 'txJsonFile',
+        extensions: ['json']
+      }]
+    }).then((value) => {
+      if (value.canceled) {
+        return {};
+      }
+      if (value.bookmarks) {
+        console.log(value.bookmarks);
+      }
+      
+      const files = value.filePaths;
+      if (files.length > 0) {
+        return promisify(readFile)(files[0], 'utf-8').then(data => {
+          if (!checkTxFileInfo(JSON.parse(data))) {
+            return {selectFileName: 'Invalid tx json file.'};
+          } else {
+            const txFileInfo = JSON.parse(data);
+            const selectFileName = path.basename(files[0]);
+            return {txFileInfo, selectFileName};
+          }
+        }).catch(e => {
+          console.log(e);
+          return {selectFileName: 'Invalid json file.'};
+        });
+      } else {
+        return {};
+      }
+    }).catch(e => {
+      console.log(e);
+      return {selectFileName: e.toString()};
+    });
+}
+
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -90,7 +135,7 @@ function createWindow() {
   }))
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on("closed", function() {
@@ -115,6 +160,13 @@ function createWindow() {
       console.log('signTx');
       console.log(result);
       mainWindow.webContents.send("responseTxSign", result);
+    });
+  });
+
+  ipcMain.on("requestFileSelect", (event) => {
+    showFileSelectDialog().then(result => {
+      console.log(result);
+      mainWindow.webContents.send("responseFileSelect", result);
     });
   });
 
@@ -148,3 +200,4 @@ app.on("activate", function() {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+

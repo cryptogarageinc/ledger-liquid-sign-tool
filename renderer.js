@@ -1,6 +1,4 @@
 const { ipcRenderer } = require('electron');
-const { readFile } = require('fs');
-const { basename } = require('path');
 const {
   canTxSignInfo, checkTxFileInfo, getTxHex, getAuthorizationSignature,
   createTxInfo,
@@ -121,62 +119,26 @@ document.getElementById('requestSign').addEventListener('click', () => {
 });
 
 document.getElementById('txFile').addEventListener('click', () => {
-  const remote = require('electron').remote;
-  const dialog = remote.dialog;
-  const focusedWindow = remote.BrowserWindow.getFocusedWindow();
-  try {
-    dialog.showOpenDialog(focusedWindow, {
-      title: 'transaction json file',
-      properties: ['openFile'],
-      filters: [{
-        name: 'txJsonFile',
-        extensions: ['json']
-      }]
-    }).then((value) => {
-      if (value.canceled) {
-        return;
-      }
-      if (value.bookmarks) {
-        console.log(value.bookmarks);
-      }
-      
-      const files = value.filePaths;
-      if (files.length > 0) {
-        readFile(files[0], {encoding: 'utf-8'}, (err, data)=>{
-          try {
-            if(err) {
-              document.getElementById('selectFileName').value = err;
-            } else if (!checkTxFileInfo(JSON.parse(data))) {
-              document.getElementById('selectFileName').value = 'Invalid tx json file.';
-            } else {
-              const txFileInfo = JSON.parse(data);
-              document.getElementById('requestSign').disabled = false;
-              document.getElementById('selectFileName').value = basename(files[0]);
-              document.getElementById('tx').value = getTxHex(txFileInfo);
-              document.getElementById('authSig').value = getAuthorizationSignature(txFileInfo);
+  ipcRenderer.send('requestFileSelect');
+});
 
-              // cleanup
-              document.getElementById('txid').value = '';
-              document.getElementById('vout').value = '0';
-              document.getElementById('commitment').value = '';
-              document.getElementById('bip32Path').value = 'm/44h/0h/0h/0/0';
-              document.getElementById('redeemScript').value = '';
-              document.getElementById('descriptor').value = '';
-              document.getElementById('address').value = '';
-            }
-          } catch (except) {
-            console.log(except);
-            document.getElementById('selectFileName').value = 'Invalid json file.';
-          }
-        });
-      }
-    }).catch(e => {
-      console.log(e);
-      document.getElementById('selectFileName').value = e.toString();
-    });
-  } catch (e) {
-    console.log(e);
-    document.getElementById('selectFileName').value = e.toString();
+ipcRenderer.on("responseFileSelect", (event, result) => {
+  if ('txFileInfo' in result) {
+    document.getElementById('requestSign').disabled = false;
+    document.getElementById('selectFileName').value = result.selectFileName;
+    document.getElementById('tx').value = getTxHex(result.txFileInfo);
+    document.getElementById('authSig').value = getAuthorizationSignature(result.txFileInfo);
+
+    // cleanup
+    document.getElementById('txid').value = '';
+    document.getElementById('vout').value = '0';
+    document.getElementById('commitment').value = '';
+    document.getElementById('bip32Path').value = 'm/44h/0h/0h/0/0';
+    document.getElementById('redeemScript').value = '';
+    document.getElementById('descriptor').value = '';
+    document.getElementById('address').value = '';
+  } else if ('selectFileName' in result) {
+    document.getElementById('selectFileName').value = result.selectFileName;
   }
 });
 
