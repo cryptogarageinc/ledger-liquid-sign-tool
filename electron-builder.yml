@@ -18,7 +18,7 @@ extraMetadata:
 
 compression: normal
 
-afterSign: "dev_script/package/notarize/notarize.js"
+#afterSign: "dev_script/package/notarize/notarize.js"
 
 mac:
   target:
