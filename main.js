@@ -10,11 +10,32 @@ const path = require('path');
 const url = require('url');
 const CfdJs = require('cfd-js-wasm');
 
-const {
-    getTxHex, getAuthorizationSignature, checkTxFileInfo
-} = require('./txFileUtil');
-
 let lastConnectedApp = LedgerLib.ApplicationType.Empty;
+
+const checkTxFileInfo = function(target) {
+  if (('tx' in target) && ('authorizationSignature' in target) &&
+      (typeof target.tx == 'string') &&
+      (typeof target.authorizationSignature == 'string') &&
+      (target.tx.length > 0) && (target.authorizationSignature.length > 0)) {
+    return true;
+  }
+  return false;
+}
+
+const getTxHex = function(jsonData) {
+  if (checkTxFileInfo(jsonData)) {
+    return jsonData.tx;
+  }
+  throw new Error('Invalid tx json file format.');
+}
+
+const getAuthorizationSignature = function(jsonData) {
+  if (checkTxFileInfo(jsonData)) {
+    return jsonData.authorizationSignature;
+  }
+  throw new Error('Invalid tx json file format.');
+}
+
 
 // This a very basic example
 // Ideally you should not run this code in main thread
@@ -124,7 +145,7 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
      webPreferences: {
-      nodeIntegration: true
+      preload: path.join(__dirname, 'preload.js'),
     }, width: 800, height: 660 });
 
   // and load the index.html of the app.
@@ -134,7 +155,9 @@ function createWindow() {
     slashes: true
   }))
 
-  // Open the DevTools.
+  LedgerLib.startUsbDetectMonitoring();
+
+  // TODO: Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
@@ -185,9 +208,14 @@ app.on("ready", createWindow);
 app.on("window-all-closed", function() {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
+  LedgerLib.finishUsbDetectMonitoring();
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+app.on("before-quit", function() {
+  LedgerLib.finishUsbDetectMonitoring();
 });
 
 app.on("activate", function() {
