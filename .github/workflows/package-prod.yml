@@ -24,7 +24,7 @@ on:
 #    description: "パッケージング時のnodeバージョン"
 
 env:
-  NODE_VERSION: 14.17.0
+  NODE_VERSION: 16.5.0
 
 jobs:
   create_releases:
@@ -80,7 +80,7 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
         shell: bash
       - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v2.1.0
+        uses: actions/setup-node@v2
         timeout-minutes: 1
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -119,7 +119,7 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
         shell: bash
       - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v2.1.0
+        uses: actions/setup-node@v2
         timeout-minutes: 1
         with:
           node-version: ${{ env.NODE_VERSION }}
