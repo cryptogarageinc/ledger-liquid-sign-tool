@@ -24,12 +24,48 @@ on:
 #    description: "パッケージング時のnodeバージョン"
 
 env:
-  NODE_VERSION: 12.18.2
+  NODE_VERSION: 14.17.0
 
 jobs:
+  create_releases:
+    name: create-releases
+    runs-on: ubuntu-18.04
+    outputs:
+      release_url: ${{ steps.output_url.outputs.upload_url }}
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: false
+        prerelease: true
+      continue-on-error: true
+    - name: Get release
+      if: steps.create_release.outcome == 'failure'
+      id: get_release
+      uses: bruceadams/get-release@v1.2.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: output url
+      id: output_url
+      run: |
+        echo "::set-output name=upload_url::${{steps.get_release.outputs.upload_url}}${{steps.create_release.outputs.upload_url}}"
+
   build-on-mac:
     # 環境情報： https://github.com/actions/virtual-environments/blob/master/images/macos/macos-10.15-Readme.md
-    runs-on: macos-latest
+    runs-on: macos-10.15
+    needs: create_releases
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,14 +75,15 @@ jobs:
 #      APPLE_ID: ${{ secrets.APPLE_ID }}
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v2.1.0
-        with:
-          node-version: ${{ env.NODE_VERSION }}
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
         shell: bash
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2.1.0
+        timeout-minutes: 1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - name: dump version
         env:
           version: ${{ steps.get_version.outputs.VERSION }}
@@ -66,32 +103,31 @@ jobs:
       - name: Package app
         env:
           version: ${{ steps.get_version.outputs.VERSION }}
-        run: yarn release ${{ steps.get_version.outputs.VERSION }}
+        run: yarn release --mac --x64
 
   build-on-win:
     # 環境情報： https://github.com/actions/virtual-environments/blob/master/images/win/Windows2019-Readme.md
-    runs-on: windows-latest
+    runs-on: windows-2019
+    needs: create_releases
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v2.1.0
-        with:
-          node-version: ${{ env.NODE_VERSION }}
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
         shell: bash
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2.1.0
+        timeout-minutes: 1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - name: dump version
         env:
           version: ${{ steps.get_version.outputs.VERSION }}
         run: echo "version=${version}"
         shell: bash
-      - name: Set bash env
-        run: |
-          echo "::add-path::/c/Program Files/Git/mingw64/libexec/git-core"
       - name: Cache node modules
         uses: actions/cache@v1
         env:
@@ -103,6 +139,6 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-${{ env.NODE_VERSION }}-
       - name: Install node modules
         run: yarn
-      - name: Build app
+      - name: Package app
         shell: bash
-        run: yarn release ${{ steps.get_version.outputs.VERSION }}
+        run: yarn release --win --x64

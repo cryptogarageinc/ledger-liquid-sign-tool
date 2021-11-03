@@ -1,10 +1,54 @@
-const { ipcRenderer } = require('electron');
-const {
-  canTxSignInfo, checkTxFileInfo, getTxHex, getAuthorizationSignature,
-  createTxInfo,
-} = require('./txFileUtil');
-
 const appNameTitle = 'ConnectApp';
+
+const checkTxFileInfo = function(target) {
+  if (('tx' in target) && ('authorizationSignature' in target) &&
+      (typeof target.tx == 'string') &&
+      (typeof target.authorizationSignature == 'string') &&
+      (target.tx.length > 0) && (target.authorizationSignature.length > 0)) {
+    return true;
+  }
+  return false;
+}
+
+const canTxSignInfo = function(target) {
+  if (checkTxFileInfo(target)) {
+    const signUtxoData = {
+      txid: document.getElementById('txid').value,
+      vout: document.getElementById('vout').value,
+      valueCommitment: document.getElementById('commitment').value,
+      bip32Path: document.getElementById('bip32Path').value,
+      redeemScript: document.getElementById('redeemScript').value,
+      descriptor: document.getElementById('descriptor').value,
+      address: document.getElementById('address').value,
+    };
+    if ((signUtxoData.txid.length > 0) && (signUtxoData.valueCommitment.length > 0) && (signUtxoData.bip32Path.length > 0)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+const getTxHex = function(jsonData) {
+  if (checkTxFileInfo(jsonData)) {
+    return jsonData.tx;
+  }
+  throw new Error('Invalid tx json file format.');
+}
+
+const getAuthorizationSignature = function(jsonData) {
+  if (checkTxFileInfo(jsonData)) {
+    return jsonData.authorizationSignature;
+  }
+  throw new Error('Invalid tx json file format.');
+}
+
+const createTxInfo = function(tx, authSig) {
+  return {
+    tx,
+    authorizationSignature: authSig,
+  };
+}
+
 
 function changeDisable(disabled, connectDisabled = undefined) {
   const fieldNames = [
@@ -55,7 +99,7 @@ function checkDisconnect(arg) {
   }
 }
 
-ipcRenderer.on("ledgerInfo", (event, arg) => {
+window.signToolApi.on("ledgerInfo", (event, arg) => {
   if (arg.success) {
     const ver = `v${arg.version.major}.${arg.version.minor}.${arg.version.patch}`
     document.getElementById('app-name').innerHTML = `${appNameTitle}: ${arg.name} (${ver})`;
@@ -71,7 +115,7 @@ ipcRenderer.on("ledgerInfo", (event, arg) => {
   }
 });
 
-ipcRenderer.on("responseTxSign", (event, result) => {
+window.signToolApi.on("responseTxSign", (event, result) => {
   if ('signInfo' in result) {
     document.getElementById('outputSignature').value = result.signInfo.signatureList[0].signature;
     if (result.signInfo.hasAddedSignatureToTxHex[0] === true) {
@@ -91,7 +135,7 @@ ipcRenderer.on("responseTxSign", (event, result) => {
 document.getElementById('connectButton').addEventListener('click', () => {
   changeDisable(true);
   document.getElementById('connectResponse').value = 'check connection...';
-  ipcRenderer.send('requestLedgerInfo');
+  window.signToolApi.requestLedgerInfo();
 });
 
 document.getElementById('requestSign').addEventListener('click', () => {
@@ -115,14 +159,14 @@ document.getElementById('requestSign').addEventListener('click', () => {
   document.getElementById('requestSign').disabled = true;
   document.getElementById('outputSignature').value = 'during sign...';
   document.getElementById('outputTx').value = '';
-  ipcRenderer.send('requestTxSign', txInfo, signUtxoData);
+  window.signToolApi.requestTxSign(txInfo, signUtxoData);
 });
 
 document.getElementById('txFile').addEventListener('click', () => {
-  ipcRenderer.send('requestFileSelect');
+  window.signToolApi.requestFileSelect();
 });
 
-ipcRenderer.on("responseFileSelect", (event, result) => {
+window.signToolApi.on("responseFileSelect", (event, result) => {
   if ('txFileInfo' in result) {
     document.getElementById('requestSign').disabled = false;
     document.getElementById('selectFileName').value = result.selectFileName;
@@ -142,8 +186,12 @@ ipcRenderer.on("responseFileSelect", (event, result) => {
   }
 });
 
-// first execute
-document.getElementById('connectButton').disabled = true;
-changeDisable(true);
-document.getElementById('connectResponse').value = 'check connection...';
-ipcRenderer.send('requestLedgerInfo');
+try {
+  // first execute
+  document.getElementById('connectButton').disabled = true;
+  changeDisable(true);
+  document.getElementById('connectResponse').value = 'check connection...';
+  window.signToolApi.requestLedgerInfo();
+} catch (e) {
+  console.log(e);
+}
